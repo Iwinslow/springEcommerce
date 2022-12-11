@@ -8,8 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.MapsId;
+// import jakarta.persistence.JoinColumn;
+// import jakarta.persistence.MapsId;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -33,9 +33,7 @@ public class Ecommerce {
     @Column(nullable = false)
     private String address;
 
-    @OneToOne
-    @MapsId
-    @JoinColumn(name = "id_fin_statement")
+    @OneToOne(mappedBy = "ecommerce")
     private FinantialStatement finantialStatement;
 
     @OneToMany(mappedBy = "ecommerce")
@@ -43,6 +41,9 @@ public class Ecommerce {
 
     @OneToMany(mappedBy = "ecommerce")
     private ArrayList<Client> clientList;
+
+    public Ecommerce() {
+    }
 
     public Ecommerce(String name, String cuit, String address, List<Product> productList, List<Client> clientList,
             FinantialStatement finantialStatement) {

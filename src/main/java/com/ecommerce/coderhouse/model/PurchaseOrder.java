@@ -1,11 +1,16 @@
 package com.ecommerce.coderhouse.model;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
+@Entity
+@Table(name="purchase_orders")
 public class PurchaseOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +24,7 @@ public class PurchaseOrder {
     private String paymentMethod;
 
     @OneToOne
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
     public PurchaseOrder() {
