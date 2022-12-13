@@ -1,3 +1,4 @@
+-- drop DB if exist, create DB, tables and some registers
 DROP DATABASE IF EXISTS ecommercespring;
 
 CREATE DATABASE ecommercespring;
