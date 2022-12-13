@@ -62,6 +62,55 @@ public class Invoice {
         this.purchaseOrder = purchaseOrder;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((taxIIBB == null) ? 0 : taxIIBB.hashCode());
+        result = prime * result + ((taxIVA == null) ? 0 : taxIVA.hashCode());
+        result = prime * result + ((purchaseOrder == null) ? 0 : purchaseOrder.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Invoice other = (Invoice) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (taxIIBB == null) {
+            if (other.taxIIBB != null)
+                return false;
+        } else if (!taxIIBB.equals(other.taxIIBB))
+            return false;
+        if (taxIVA == null) {
+            if (other.taxIVA != null)
+                return false;
+        } else if (!taxIVA.equals(other.taxIVA))
+            return false;
+        if (purchaseOrder == null) {
+            if (other.purchaseOrder != null)
+                return false;
+        } else if (!purchaseOrder.equals(other.purchaseOrder))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Invoice [id=" + id + ", taxIIBB=" + taxIIBB + ", taxIVA=" + taxIVA + ", purchaseOrder=" + purchaseOrder
+                + "]";
+    }
+
     
 
 }

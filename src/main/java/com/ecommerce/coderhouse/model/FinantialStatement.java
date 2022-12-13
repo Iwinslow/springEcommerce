@@ -79,4 +79,59 @@ public class FinantialStatement {
         this.totalIIBB = totalIIBB;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        long temp;
+        temp = Double.doubleToLongBits(totalSales);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(totalIVA);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(totalIIBB);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + invoicesIssued;
+        result = prime * result + ((ecommerce == null) ? 0 : ecommerce.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        FinantialStatement other = (FinantialStatement) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (Double.doubleToLongBits(totalSales) != Double.doubleToLongBits(other.totalSales))
+            return false;
+        if (Double.doubleToLongBits(totalIVA) != Double.doubleToLongBits(other.totalIVA))
+            return false;
+        if (Double.doubleToLongBits(totalIIBB) != Double.doubleToLongBits(other.totalIIBB))
+            return false;
+        if (invoicesIssued != other.invoicesIssued)
+            return false;
+        if (ecommerce == null) {
+            if (other.ecommerce != null)
+                return false;
+        } else if (!ecommerce.equals(other.ecommerce))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "FinantialStatement [id=" + id + ", totalSales=" + totalSales + ", totalIVA=" + totalIVA + ", totalIIBB="
+                + totalIIBB + ", invoicesIssued=" + invoicesIssued + ", ecommerce=" + ecommerce + "]";
+    }
+
+    
+
 }

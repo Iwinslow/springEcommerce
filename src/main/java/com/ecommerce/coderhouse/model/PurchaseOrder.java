@@ -61,6 +61,55 @@ public class PurchaseOrder {
         this.cart = cart;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
+        result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
+        result = prime * result + ((paymentMethod == null) ? 0 : paymentMethod.hashCode());
+        result = prime * result + ((cart == null) ? 0 : cart.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        PurchaseOrder other = (PurchaseOrder) obj;
+        if (id == null) {
+            if (other.id != null)
+                return false;
+        } else if (!id.equals(other.id))
+            return false;
+        if (deliveryAddress == null) {
+            if (other.deliveryAddress != null)
+                return false;
+        } else if (!deliveryAddress.equals(other.deliveryAddress))
+            return false;
+        if (paymentMethod == null) {
+            if (other.paymentMethod != null)
+                return false;
+        } else if (!paymentMethod.equals(other.paymentMethod))
+            return false;
+        if (cart == null) {
+            if (other.cart != null)
+                return false;
+        } else if (!cart.equals(other.cart))
+            return false;
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "PurchaseOrder [id=" + id + ", deliveryAddress=" + deliveryAddress + ", paymentMethod=" + paymentMethod
+                + ", cart=" + cart + "]";
+    }
+
 
     
     
