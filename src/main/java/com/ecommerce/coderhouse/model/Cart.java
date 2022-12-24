@@ -1,14 +1,11 @@
 package com.ecommerce.coderhouse.model;
 
-import java.util.ArrayList;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
@@ -28,8 +25,8 @@ public class Cart {
     @JoinColumn(name = "id_client")
     private Client client;
 
-    @OneToMany
-    private ArrayList<CartItem> cartItems;
+    // @OneToMany
+    // private ArrayList<CartItem> cartItems;
 
     @Column(nullable = false)
     private double total;
@@ -37,10 +34,9 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(String state, Client client, ArrayList<CartItem> cartItems, String total) {
+    public Cart(String state, Client client, String total) {
         this.state = "pending";
         this.client = new Client();
-        this.cartItems = new ArrayList<CartItem>();
         this.total = 0.00;
     }
 
@@ -62,14 +58,6 @@ public class Cart {
         this.client = client;
     }
 
-    public ArrayList<CartItem> getCartItems() {
-        return cartItems;
-    }
-
-    public void setCartItems(ArrayList<CartItem> cartItems) {
-        this.cartItems = cartItems;
-    }
-
     public double getTotal() {
         return total;
     }
@@ -85,7 +73,6 @@ public class Cart {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((state == null) ? 0 : state.hashCode());
         result = prime * result + ((client == null) ? 0 : client.hashCode());
-        result = prime * result + ((cartItems == null) ? 0 : cartItems.hashCode());
         long temp;
         temp = Double.doubleToLongBits(total);
         result = prime * result + (int) (temp ^ (temp >>> 32));
@@ -116,11 +103,6 @@ public class Cart {
                 return false;
         } else if (!client.equals(other.client))
             return false;
-        if (cartItems == null) {
-            if (other.cartItems != null)
-                return false;
-        } else if (!cartItems.equals(other.cartItems))
-            return false;
         if (Double.doubleToLongBits(total) != Double.doubleToLongBits(other.total))
             return false;
         return true;
@@ -128,7 +110,7 @@ public class Cart {
 
     @Override
     public String toString() {
-        return "Cart [id=" + id + ", state=" + state + ", client=" + client + ", cartItems=" + cartItems + ", total="
+        return "Cart [id=" + id + ", state=" + state + ", client=" + client + ", total="
                 + total + "]";
     }
 

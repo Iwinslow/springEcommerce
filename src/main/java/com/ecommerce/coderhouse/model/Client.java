@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -35,24 +34,29 @@ public class Client {
     @Column
     private String address;
 
-    @ManyToOne
-    private Ecommerce ecommerce;
 
     public Client() {
     } 
 
     public Client(String documentType, String documentNumber, String ivaSituation, String fullname, String email,
-            String address, Ecommerce ecommerce) {
+            String address) {
         this.documentType = documentType;
         this.documentNumber = documentNumber;
         this.ivaSituation = ivaSituation;
         this.fullname = fullname;
         this.email = email;
         this.address = address;
-        this.ecommerce = ecommerce;
     }
 
     //getters & setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getDocumentType() {
         return documentType;
     }
@@ -112,7 +116,6 @@ public class Client {
         result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
         result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((address == null) ? 0 : address.hashCode());
-        result = prime * result + ((ecommerce == null) ? 0 : ecommerce.hashCode());
         return result;
     }
 
@@ -160,11 +163,6 @@ public class Client {
                 return false;
         } else if (!address.equals(other.address))
             return false;
-        if (ecommerce == null) {
-            if (other.ecommerce != null)
-                return false;
-        } else if (!ecommerce.equals(other.ecommerce))
-            return false;
         return true;
     }
 
@@ -172,9 +170,8 @@ public class Client {
     public String toString() {
         return "Client [id=" + id + ", documentType=" + documentType + ", documentNumber=" + documentNumber
                 + ", ivaSituation=" + ivaSituation + ", fullname=" + fullname + ", email=" + email + ", address="
-                + address + ", ecommerce=" + ecommerce + "]";
+                + address + "]";
     }
-
 
     
 }

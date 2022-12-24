@@ -5,7 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -33,27 +32,31 @@ public class Product {
     private int stock;
 
     @Column(nullable = false, updatable = false)
-    private int unit;
-
-    @ManyToOne
-    private Ecommerce ecommerce;
+    private String unit;
 
     public Product() {
     }
 
 
-    public Product(String codigo, String name, String description, double price, int stock, int unit,
-            Ecommerce ecommerce) {
+    public Product(String codigo, String name, String description, double price, int stock, String unit) {
         this.codigo = codigo;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.unit = unit;
-        this.ecommerce = ecommerce;
     }
 
     //getters & setters
+    public Long getId() {
+        return id;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
     public String getCodigo() {
         return codigo;
     }
@@ -94,11 +97,11 @@ public class Product {
         this.stock = stock;
     }
 
-    public int getUnit() {
+    public String getUnit() {
         return unit;
     }
 
-    public void setUnit(int unidad) {
+    public void setUnit(String unidad) {
         this.unit = unidad;
     }
 
@@ -115,8 +118,7 @@ public class Product {
         temp = Double.doubleToLongBits(price);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + stock;
-        result = prime * result + unit;
-        result = prime * result + ((ecommerce == null) ? 0 : ecommerce.hashCode());
+        result = prime * result + ((unit == null) ? 0 : unit.hashCode());
         return result;
     }
 
@@ -154,24 +156,19 @@ public class Product {
             return false;
         if (stock != other.stock)
             return false;
-        if (unit != other.unit)
-            return false;
-        if (ecommerce == null) {
-            if (other.ecommerce != null)
+        if (unit == null) {
+            if (other.unit != null)
                 return false;
-        } else if (!ecommerce.equals(other.ecommerce))
+        } else if (!unit.equals(other.unit))
             return false;
         return true;
     }
 
-
     @Override
     public String toString() {
         return "Product [id=" + id + ", codigo=" + codigo + ", name=" + name + ", description=" + description
-                + ", price=" + price + ", stock=" + stock + ", unit=" + unit + ", ecommerce=" + ecommerce + "]";
+                + ", price=" + price + ", stock=" + stock + ", unit=" + unit + "]";
     }
 
-
     
-
 }
