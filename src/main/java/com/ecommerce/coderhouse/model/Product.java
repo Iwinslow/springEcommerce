@@ -19,7 +19,7 @@ public class Product {
     @Column(nullable = false, unique = true, updatable = false)
     private String codigo;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String name;
     
     @Column
