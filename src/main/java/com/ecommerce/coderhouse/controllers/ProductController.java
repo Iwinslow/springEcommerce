@@ -32,7 +32,7 @@ class ProductController {
 
     /*
     GET /product/{id}
-    Obtiene los datos del Cliente con id indicado en la URL
+    Obtiene los datos del Producto con id indicado en la URL
      */
     @GetMapping(path = "/{id}")
     public Product getProductById(@PathVariable Long id) throws Exception {
@@ -40,8 +40,8 @@ class ProductController {
     }
 
     /*
-    GET /cliente/all
-    // Obtiene todos los clientes registrados
+    GET /product/all
+    // Obtiene todos los Productos registrados
     //  */
     @GetMapping(path = "/all")
     public List<Product> getAllProducts() throws Exception {
