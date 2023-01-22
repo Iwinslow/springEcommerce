@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -17,11 +17,10 @@ public class Cart {
     @Column(name="id_cart")
     private Long id;
 
-    //Cart states = pending (initial), confirm(transaction finished)
     @Column(nullable = false)
-    private String state;
+    private Boolean confirmed;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_client")
     private Client client;
 
@@ -34,20 +33,26 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(String state, Client client, String total) {
-        this.state = "pending";
-        this.client = new Client();
+    public Cart(Client client) {
+        this.confirmed = false;
+        this.client = client;
         this.total = 0.00;
     }
 
-    
-    //getters & setters
-    public String getState() {
-        return state;
+    public Long getId() {
+        return id;
     }
 
-    public void setState(String state) {
-        this.state = state;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
     }
 
     public Client getClient() {
@@ -71,7 +76,7 @@ public class Cart {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((state == null) ? 0 : state.hashCode());
+        result = prime * result + ((confirmed == null) ? 0 : confirmed.hashCode());
         result = prime * result + ((client == null) ? 0 : client.hashCode());
         long temp;
         temp = Double.doubleToLongBits(total);
@@ -93,10 +98,10 @@ public class Cart {
                 return false;
         } else if (!id.equals(other.id))
             return false;
-        if (state == null) {
-            if (other.state != null)
+        if (confirmed == null) {
+            if (other.confirmed != null)
                 return false;
-        } else if (!state.equals(other.state))
+        } else if (!confirmed.equals(other.confirmed))
             return false;
         if (client == null) {
             if (other.client != null)
@@ -110,10 +115,8 @@ public class Cart {
 
     @Override
     public String toString() {
-        return "Cart [id=" + id + ", state=" + state + ", client=" + client + ", total="
-                + total + "]";
+        return "Cart [id=" + id + ", confirmed=" + confirmed + ", client=" + client + ", total=" + total + "]";
     }
-
     
 
 }

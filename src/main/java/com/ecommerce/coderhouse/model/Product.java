@@ -34,17 +34,21 @@ public class Product {
     @Column(nullable = false, updatable = false)
     private String unit;
 
+    @Column
+    private String image;
+
     public Product() {
     }
 
 
-    public Product(String codigo, String name, String description, double price, int stock, String unit) {
+    public Product(String codigo, String name, String description, double price, int stock, String unit, String image) {
         this.codigo = codigo;
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.unit = unit;
+        this.image = image;
     }
 
     //getters & setters
@@ -105,6 +109,15 @@ public class Product {
         this.unit = unidad;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
 
     @Override
     public int hashCode() {
@@ -119,6 +132,7 @@ public class Product {
         result = prime * result + (int) (temp ^ (temp >>> 32));
         result = prime * result + stock;
         result = prime * result + ((unit == null) ? 0 : unit.hashCode());
+        result = prime * result + ((image == null) ? 0 : image.hashCode());
         return result;
     }
 
@@ -161,13 +175,19 @@ public class Product {
                 return false;
         } else if (!unit.equals(other.unit))
             return false;
+        if (image == null) {
+            if (other.image != null)
+                return false;
+        } else if (!image.equals(other.image))
+            return false;
         return true;
     }
+
 
     @Override
     public String toString() {
         return "Product [id=" + id + ", codigo=" + codigo + ", name=" + name + ", description=" + description
-                + ", price=" + price + ", stock=" + stock + ", unit=" + unit + "]";
+                + ", price=" + price + ", stock=" + stock + ", unit=" + unit + ", image=" + image + "]";
     }
 
     

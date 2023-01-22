@@ -1,6 +1,7 @@
 package com.ecommerce.coderhouse.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ecommerce.coderhouse.IdsListWrapper;
 import com.ecommerce.coderhouse.model.Product;
@@ -35,9 +37,15 @@ class ProductController {
     Obtiene los datos del Producto con id indicado en la URL
      */
     @GetMapping(path = "/{id}")
-    public Product getProductById(@PathVariable Long id) throws Exception {
-        return this.service.getProductById(id).orElseThrow(()->new Exception("Product with ID "+ id +" was not found"));
+    public Optional<Product> getProductById(@PathVariable Long id) throws Exception {
+        Optional<Product> productFound = this.service.getProductById(id);
+        if(productFound.isPresent()){
+            return productFound;
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client Not Found");
+        }   
     }
+    
 
     /*
     GET /product/all
@@ -54,11 +62,12 @@ class ProductController {
      Ejemplo:
      {
         "codigo": "321456988",
-        "name": "Teclado luminoso Corsair",
-        "description": "Un teclado con luces muy copadas",
+        "name": "Auricular luminoso Corsair",
+        "description": "Un auricular con luces muy copadas",
          "price": 60000.00,
           "stock": 20,
-          "unit": "UNIDADES"
+          "unit": "UNIDADES",
+          "image":"https://app.contabilium.com/files/explorer/20302/Productos-Servicios/concepto-9235894.jpg"
      }
       */
     @PostMapping

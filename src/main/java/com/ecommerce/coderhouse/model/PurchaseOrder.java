@@ -23,6 +23,10 @@ public class PurchaseOrder {
     @Column(nullable = false, updatable = false)
     private String paymentMethod;
 
+    @Column(nullable = false)
+    private Boolean invoiced;
+    
+
     @OneToOne
     @JoinColumn(name = "cart_id")
     private Cart cart;
@@ -33,10 +37,18 @@ public class PurchaseOrder {
     public PurchaseOrder(String deliveryAddress, String paymentMethod, Cart cart) {
         this.deliveryAddress = deliveryAddress;
         this.paymentMethod = paymentMethod;
-        this.cart = new Cart();
+        this.cart = cart;
+        this.invoiced = false;
     }
 
-    //getters & setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getDeliveryAddress() {
         return deliveryAddress;
     }
@@ -51,6 +63,14 @@ public class PurchaseOrder {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public Boolean getInvoiced() {
+        return invoiced;
+    }
+
+    public void setInvoiced(Boolean invoiced) {
+        this.invoiced = invoiced;
     }
 
     public Cart getCart() {
@@ -68,6 +88,7 @@ public class PurchaseOrder {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((deliveryAddress == null) ? 0 : deliveryAddress.hashCode());
         result = prime * result + ((paymentMethod == null) ? 0 : paymentMethod.hashCode());
+        result = prime * result + ((invoiced == null) ? 0 : invoiced.hashCode());
         result = prime * result + ((cart == null) ? 0 : cart.hashCode());
         return result;
     }
@@ -96,6 +117,11 @@ public class PurchaseOrder {
                 return false;
         } else if (!paymentMethod.equals(other.paymentMethod))
             return false;
+        if (invoiced == null) {
+            if (other.invoiced != null)
+                return false;
+        } else if (!invoiced.equals(other.invoiced))
+            return false;
         if (cart == null) {
             if (other.cart != null)
                 return false;
@@ -107,10 +133,10 @@ public class PurchaseOrder {
     @Override
     public String toString() {
         return "PurchaseOrder [id=" + id + ", deliveryAddress=" + deliveryAddress + ", paymentMethod=" + paymentMethod
-                + ", cart=" + cart + "]";
+                + ", invoiced=" + invoiced + ", cart=" + cart + "]";
     }
 
-
+   
     
     
 }
