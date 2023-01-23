@@ -16,9 +16,6 @@ public class Product {
     @Column(name="id_product")
     private Long id;
 
-    @Column(nullable = false, unique = true, updatable = false)
-    private String codigo;
-
     @Column(nullable = false, updatable = false)
     private String name;
     
@@ -42,7 +39,6 @@ public class Product {
 
 
     public Product(String codigo, String name, String description, double price, int stock, String unit, String image) {
-        this.codigo = codigo;
         this.name = name;
         this.description = description;
         this.price = price;
@@ -59,14 +55,6 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
-    }
-    
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getName() {
@@ -124,7 +112,6 @@ public class Product {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
-        result = prime * result + ((codigo == null) ? 0 : codigo.hashCode());
         result = prime * result + ((name == null) ? 0 : name.hashCode());
         result = prime * result + ((description == null) ? 0 : description.hashCode());
         long temp;
@@ -150,11 +137,6 @@ public class Product {
             if (other.id != null)
                 return false;
         } else if (!id.equals(other.id))
-            return false;
-        if (codigo == null) {
-            if (other.codigo != null)
-                return false;
-        } else if (!codigo.equals(other.codigo))
             return false;
         if (name == null) {
             if (other.name != null)
@@ -186,8 +168,8 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product [id=" + id + ", codigo=" + codigo + ", name=" + name + ", description=" + description
-                + ", price=" + price + ", stock=" + stock + ", unit=" + unit + ", image=" + image + "]";
+        return "Product [id=" + id + ", name=" + name + ", description=" + description + ", price=" + price + ", stock="
+                + stock + ", unit=" + unit + ", image=" + image + "]";
     }
 
     

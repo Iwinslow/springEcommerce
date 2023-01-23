@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-// import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -42,26 +41,30 @@ class ProductController {
         if(productFound.isPresent()){
             return productFound;
         }else{
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client Not Found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with ID " + id + " was not found");
         }   
     }
     
-
     /*
     GET /product/all
     // Obtiene todos los Productos registrados
     //  */
     @GetMapping(path = "/all")
     public List<Product> getAllProducts() throws Exception {
-        return this.service.getAllProducts();
+        List<Product> productList = this.service.getAllProducts();
+        if(productList.size()>0){
+            return productList;
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There are no products to list"); 
+        }
+        
     }
 
      /*
      POST /api/product
      Recibe en el body un objeto Product y lo persiste en la base de datos MySql
-     Ejemplo:
+     Ejemplo OK:
      {
-        "codigo": "321456988",
         "name": "Auricular luminoso Corsair",
         "description": "Un auricular con luces muy copadas",
          "price": 60000.00,
@@ -72,16 +75,19 @@ class ProductController {
       */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Product createProduct(@RequestBody Product product){
-        //TODO: Check notNull and specifications
-        return this.service.createProduct(product);
+    public Product createProduct(@RequestBody Product product) throws Exception{
+        if(product.getName()==null || product.getPrice()==0 || product.getStock()==0 || product.getUnit()==null ){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request body must include name, price, stock and unit");   
+        }else{
+            return this.service.createProduct(product);
+        }
     }
 
      /*
      PUT /api/product/{id}
      Recibe en el body las keys que quieran ser actualizadas respecto al producto especifico (el pasado por params {id})
-     REMEMBER! -> PRODUCT ATTRIBUTES "codigo" AND "unit" ARE updatable = false
-     Ejemplo:
+     REMEMBER! -> PRODUCT ATTRIBUTES "name" AND "unit" ARE updatable = false
+     Ejemplo OK:
      {
         "description": "Un teclado con luces muy copadas de china",
          "price": 3000.00,
@@ -90,16 +96,18 @@ class ProductController {
     */
     @PutMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
-        //TODO: Check notNull and specifications
-        return service.updateProduct(id, product);
+    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) throws Exception{
+        if(product.getName()!=null||product.getUnit()!=null){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product name or unit are not updatables");
+        }else{
+            return service.updateProduct(id, product);
+        }
     }
-
 
      /*
      DELETE /api/product
      Recibe en el body un objeto con la key idsList, cuyo value es un array con los IDs de los productos a eliminar
-     Ejemplo:
+     Ejemplo OK:
     {
         "idsList":[1, 3, 101]
     }
@@ -108,10 +116,9 @@ class ProductController {
     public ResponseEntity<String> deleteProduct(@RequestBody IdsListWrapper idsListWrapper) throws Exception{
         try {
             this.service.deleteProduct(idsListWrapper);
-            return new ResponseEntity<>("All Products have been deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Products have been deleted", HttpStatus.OK);
         } catch (Exception e) {
-            throw e;
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Must include key 'idsList' with an Array of numbers as a value in request body");
         }
-         
     }
 }

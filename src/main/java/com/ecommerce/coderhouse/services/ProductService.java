@@ -29,19 +29,18 @@ public class ProductService {
 
     public Product updateProduct(Long productId, Product newProduct){
         return productRepository.findById(productId).map(product->{
-            //PRODUCT ATTRIBUTE "codigo" AND "unit" ARE updatable = false
-            // product.setCodigo(newProduct.getCodigo());
+            //PRODUCT ATTRIBUTE "name" AND "unit" ARE updatable = false
             if (newProduct.getDescription() != null) {
                 product.setDescription(newProduct.getDescription());
-            }
-            if (newProduct.getName() != null) {
-                product.setName(newProduct.getName());
             }
             if (newProduct.getPrice() != 0.00) {
                 product.setPrice(newProduct.getPrice());
             }
             if (newProduct.getStock() !=0) {
                 product.setStock(newProduct.getStock());
+            }
+            if (newProduct.getImage() != null) {
+                product.setImage(newProduct.getImage());
             }
             
             return productRepository.save(product);

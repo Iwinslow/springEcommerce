@@ -25,7 +25,7 @@ public class Client {
     @Column(name="iva_situation")
     private String ivaSituation;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private String fullname;
 
     @Column(nullable = false)
