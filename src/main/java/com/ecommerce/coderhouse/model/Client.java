@@ -22,9 +22,6 @@ public class Client {
     @Column(name="document_number", nullable = false, updatable = false)
     private String documentNumber;
 
-    @Column(name="iva_situation")
-    private String ivaSituation;
-
     @Column(nullable = false, updatable = false)
     private String fullname;
 
@@ -42,7 +39,6 @@ public class Client {
             String address) {
         this.documentType = documentType;
         this.documentNumber = documentNumber;
-        this.ivaSituation = ivaSituation;
         this.fullname = fullname;
         this.email = email;
         this.address = address;
@@ -71,14 +67,6 @@ public class Client {
 
     public void setDocumentNumber(String documentNumber) {
         this.documentNumber = documentNumber;
-    }
-
-    public String getIvaSituation() {
-        return ivaSituation;
-    }
-
-    public void setIvaSituation(String ivaSituation) {
-        this.ivaSituation = ivaSituation;
     }
 
     public String getFullname() {
@@ -112,7 +100,6 @@ public class Client {
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((documentType == null) ? 0 : documentType.hashCode());
         result = prime * result + ((documentNumber == null) ? 0 : documentNumber.hashCode());
-        result = prime * result + ((ivaSituation == null) ? 0 : ivaSituation.hashCode());
         result = prime * result + ((fullname == null) ? 0 : fullname.hashCode());
         result = prime * result + ((email == null) ? 0 : email.hashCode());
         result = prime * result + ((address == null) ? 0 : address.hashCode());
@@ -143,11 +130,6 @@ public class Client {
                 return false;
         } else if (!documentNumber.equals(other.documentNumber))
             return false;
-        if (ivaSituation == null) {
-            if (other.ivaSituation != null)
-                return false;
-        } else if (!ivaSituation.equals(other.ivaSituation))
-            return false;
         if (fullname == null) {
             if (other.fullname != null)
                 return false;
@@ -169,9 +151,9 @@ public class Client {
     @Override
     public String toString() {
         return "Client [id=" + id + ", documentType=" + documentType + ", documentNumber=" + documentNumber
-                + ", ivaSituation=" + ivaSituation + ", fullname=" + fullname + ", email=" + email + ", address="
-                + address + "]";
+                + ", fullname=" + fullname + ", email=" + email + ", address=" + address + "]";
     }
+
 
     
 }

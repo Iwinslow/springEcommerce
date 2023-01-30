@@ -31,9 +31,6 @@ public class ClientService {
     public Client updateClient(Long clientId, Client newClient){
         return clientRepository.findById(clientId).map(client->{
             //CLIENT ATTRIBUTE "documentType", "documentNumber" AND "fullname" ARE updatable = false
-            if (newClient.getIvaSituation() != null) {
-                client.setIvaSituation(newClient.getIvaSituation());
-            }
             if (newClient.getEmail() != null) {
                 client.setEmail(newClient.getEmail());
             }

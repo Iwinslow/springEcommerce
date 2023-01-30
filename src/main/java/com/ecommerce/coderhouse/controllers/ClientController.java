@@ -70,7 +70,6 @@ public class ClientController {
         "fullname": "Bill Gates",
         "email":"this_is_billgates@gmail.com",
         "address": "Calle falsa 123",
-        "ivaSituation": "Monotributo"
     }
      */
     @PostMapping
@@ -88,7 +87,6 @@ public class ClientController {
      REMEMBER! -> CLIENT ATTRIBUTES "documentType", "documentNumber" AND "fullname" ARE updatable = false
      Ejemplo OK:
      {
-        "ivaSituation": "Responsable inscripto",
          "email": "this_is_billgates@hotmail.com",,
           "address": "Nueva Calle falsa 321"
      }
