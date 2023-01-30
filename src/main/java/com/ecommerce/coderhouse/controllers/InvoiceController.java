@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.ecommerce.coderhouse.DateDTO;
 import com.ecommerce.coderhouse.InvoiceDTO;
 import com.ecommerce.coderhouse.model.Client;
 import com.ecommerce.coderhouse.model.Invoice;
@@ -105,71 +106,83 @@ public class InvoiceController {
         if(invoiceDTO.getClientid()==null || invoiceDTO.getInvoiceItems().size()==0){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Request body must include clientid and invoiceItems wich must contain as least one product");   
         }else{
+            String date;
+            
             RestTemplate restTemplate = new RestTemplate();
             String fooResourceUrl
             = "http://worldclockapi.com/api/json/utc/now";
 
-            ResponseEntity<String> response
-            = restTemplate.getForEntity(fooResourceUrl, String.class);
-
-            String date = Instant.now().toString();
-
-            System.out.println("////////////////////////////////");
-            System.out.println("RESPONSE BODY");
-            System.out.println(response.getBody());
-
-         
-
-            System.out.println("////////////////////////////////");
-            System.out.println("Instant date");
-            System.out.println(date);
+            ResponseEntity<DateDTO> response
+            = restTemplate.getForEntity(fooResourceUrl, DateDTO.class);
+            if(response.getBody().getCurrentDateTime() != null){
+                date = response.getBody().getCurrentDateTime();
+            }else{
+                date = Instant.now().toString();
+            }
             
             Optional<Client> invoiceClient = clientService.getClientById(invoiceDTO.getClientid());
             //CONTROLA:
             /// 3) SI EL CLIENTE NO EXISTE, RETORNA ERROR
             if(!invoiceClient.isPresent()){
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The clientid " + invoiceDTO.getClientid() + "does not exist in our records");   
-            }
+            }else{
+                Invoice newInvoice = new Invoice();
 
-            Invoice newInvoice = new Invoice();
+                List<InvoiceItem> invoicesItemsToAdd = new ArrayList<InvoiceItem>();
+                List<Product> productsItemsToUpdate = new ArrayList<Product>();
+    
+                invoiceDTO.getInvoiceItems().forEach(invoiceItem->{
+    
+                    Optional<Product> productItem =  productService.getProductById(invoiceItem.getProductid());
+                    //CONTROLA:
+                    /// 4) SI UNO DE LOS PRODUCTOS NO EXISTE, RETORNA ERROR
+                    /// 5) SI NO EXISTE STOCK PARA EL PRODUCTO, RETORNA INFORMANDO AL USUARIO
+                    if(!productItem.isPresent()||productItem.get().getStock()<invoiceItem.getQuantity()){
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The product with id " + invoiceItem.getProductid() + " does not exist in our records or have No STOCK disponible");
+                    }else{
+                        productsItemsToUpdate.add(productItem.get());
+                        double itemSubtotalToAdd = productItem.get().getPrice()*invoiceItem.getQuantity();
+    
+                        newInvoice.setTotal(newInvoice.getTotal()+itemSubtotalToAdd);
+        
+                        InvoiceItem invoiceItemToAdd = new InvoiceItem();
+                        invoiceItemToAdd.setProductid(productItem.get().getId());
+                        invoiceItemToAdd.setQuantity(invoiceItem.getQuantity());
+                        invoiceItemToAdd.setItemSubtotal(itemSubtotalToAdd);
+                        invoiceItemToAdd.setProductName(productItem.get().getName());
+                        invoiceItemToAdd.setProductDescription(productItem.get().getDescription());
+                        invoiceItemToAdd.setProductPrice(productItem.get().getPrice());
+        
+                        invoicesItemsToAdd.add(invoiceItemToAdd);
+                    }
+                });
+    
+                //Actualiza el stock. Persiste la INVOICE y los InvoiceItems
+                newInvoice.setClient(invoiceClient.get());
+                newInvoice.setDate(date);
+    
+                Invoice persistedNewInvoice = invoiceService.createInvoice(newInvoice);
 
-            List<InvoiceItem> invoicesItemsToAdd = new ArrayList<InvoiceItem>();
 
-            invoiceDTO.getInvoiceItems().forEach(invoiceItem->{
+                for (int index = 0; index < invoicesItemsToAdd.size(); index++) {
 
-                Optional<Product> productItem =  productService.getProductById(invoiceItem.getProductid());
-                //CONTROLA:
-                /// 4) SI UNO DE LOS PRODUCTOS NO EXISTE, RETORNA ERROR
-                if(!productItem.isPresent()){
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The product with id " + invoiceItem.getProductid() + "does not exist in our records");   
+                    productsItemsToUpdate.get(index).setStock(productsItemsToUpdate.get(index).getStock()-invoicesItemsToAdd.get(index).getQuantity());
+                    
+                    productService.updateProduct(productsItemsToUpdate.get(index).getId(), productsItemsToUpdate.get(index));
+    
+                    
+                    invoicesItemsToAdd.get(index).setInvoice(persistedNewInvoice);
+                    invoiceItemServices.createInvoiceItem(invoicesItemsToAdd.get(index));
                 }
 
-                double itemSubtotalToAdd = productItem.get().getPrice()*invoiceItem.getQuantity();
+                persistedNewInvoice.setInvoiceItems(invoicesItemsToAdd);
+    
+                //return invoiceService.getInvoiceById(persistedNewInvoice.getId()).get();
+                return persistedNewInvoice;
+                
+            }
 
-                newInvoice.setTotal(newInvoice.getTotal()+itemSubtotalToAdd);
-
-                InvoiceItem invoiceItemToAdd = new InvoiceItem();
-                invoiceItemToAdd.setProduct(productItem.get());
-                invoiceItemToAdd.setQuantity(invoiceItem.getQuantity());
-                invoiceItemToAdd.setItemSubtotal(itemSubtotalToAdd);
-
-                invoicesItemsToAdd.add(invoiceItemToAdd);
-            });
-
-            //Persiste la INVOICE y los InvoiceItems
-            newInvoice.setClient(invoiceClient.get());
-            newInvoice.setDate(date);
-
-
-            Invoice persistedNewInvoice = invoiceService.createInvoice(newInvoice);
-
-            invoicesItemsToAdd.forEach(invoiceItemToAdd ->{
-                invoiceItemToAdd.setInvoice(persistedNewInvoice);
-                invoiceItemServices.createInvoiceItem(invoiceItemToAdd);
-            });
-
-            return invoiceService.getInvoiceById(persistedNewInvoice.getId()).get();
-            
+           
     }
 
     }

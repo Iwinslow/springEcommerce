@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 
@@ -28,9 +27,18 @@ public class InvoiceItem {
     @JoinColumn(name = "invoiceid", nullable = false)
     private Invoice invoice;
 
-    @OneToOne
-    @JoinColumn(name = "productid", nullable = false)
-    private Product product;
+    @Column(nullable = false, updatable = false)
+    private Long productid;
+
+    @Column(nullable = false, updatable = false)
+    private String productName;
+    
+    @Column
+    private String productDescription;
+
+    @Column(nullable = false)
+    private double productPrice;
+
 
     @Column(nullable = false)
     private int quantity;
@@ -41,9 +49,13 @@ public class InvoiceItem {
     public InvoiceItem() {
     }
 
-    public InvoiceItem(Invoice invoice, Product product, int quantity, double itemSubtotal) {
+    public InvoiceItem(Invoice invoice, Long productid, String productName, String productDescription,
+            double productPrice, int quantity, double itemSubtotal) {
         this.invoice = invoice;
-        this.product = product;
+        this.productid = productid;
+        this.productName = productName;
+        this.productDescription = productDescription;
+        this.productPrice = productPrice;
         this.quantity = quantity;
         this.itemSubtotal = itemSubtotal;
     }
@@ -64,12 +76,36 @@ public class InvoiceItem {
         this.invoice = invoice;
     }
 
-    public Product getProduct() {
-        return product;
+    public Long getProductid() {
+        return productid;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductid(Long productid) {
+        this.productid = productid;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductDescription() {
+        return productDescription;
+    }
+
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
+    }
+
+    public double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
     }
 
     public int getQuantity() {
@@ -94,9 +130,13 @@ public class InvoiceItem {
         int result = 1;
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((invoice == null) ? 0 : invoice.hashCode());
-        result = prime * result + ((product == null) ? 0 : product.hashCode());
-        result = prime * result + quantity;
+        result = prime * result + ((productid == null) ? 0 : productid.hashCode());
+        result = prime * result + ((productName == null) ? 0 : productName.hashCode());
+        result = prime * result + ((productDescription == null) ? 0 : productDescription.hashCode());
         long temp;
+        temp = Double.doubleToLongBits(productPrice);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + quantity;
         temp = Double.doubleToLongBits(itemSubtotal);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
@@ -121,10 +161,22 @@ public class InvoiceItem {
                 return false;
         } else if (!invoice.equals(other.invoice))
             return false;
-        if (product == null) {
-            if (other.product != null)
+        if (productid == null) {
+            if (other.productid != null)
                 return false;
-        } else if (!product.equals(other.product))
+        } else if (!productid.equals(other.productid))
+            return false;
+        if (productName == null) {
+            if (other.productName != null)
+                return false;
+        } else if (!productName.equals(other.productName))
+            return false;
+        if (productDescription == null) {
+            if (other.productDescription != null)
+                return false;
+        } else if (!productDescription.equals(other.productDescription))
+            return false;
+        if (Double.doubleToLongBits(productPrice) != Double.doubleToLongBits(other.productPrice))
             return false;
         if (quantity != other.quantity)
             return false;
@@ -135,10 +187,12 @@ public class InvoiceItem {
 
     @Override
     public String toString() {
-        return "InvoiceItem [id=" + id + ", invoice=" + invoice + ", product=" + product + ", quantity=" + quantity
-                + ", itemSubtotal=" + itemSubtotal + "]";
+        return "InvoiceItem [id=" + id + ", invoice=" + invoice + ", productid=" + productid + ", productName="
+                + productName + ", productDescription=" + productDescription + ", productPrice=" + productPrice
+                + ", quantity=" + quantity + ", itemSubtotal=" + itemSubtotal + "]";
     }
 
     
+   
     
 }
